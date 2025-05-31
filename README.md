@@ -19,10 +19,10 @@ Il implémente une architecture d’authentification **stateless** basée sur JW
 
 ##  Fonctionnalités
 
-- ✅ Création de compte (registration)
-- ✅ Authentification avec génération de JWT
-- ✅ Vérification et validation du token
-- ✅ Sécurisation des endpoints via Spring Security
+-  Création de compte (registration)
+-  Authentification avec génération de JWT
+-  Vérification et validation du token
+-  Sécurisation des endpoints via Spring Security
 
 
 
