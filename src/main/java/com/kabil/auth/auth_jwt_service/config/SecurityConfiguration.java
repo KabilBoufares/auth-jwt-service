@@ -3,9 +3,9 @@ package com.kabil.auth.auth_jwt_service.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 @Configuration
@@ -17,6 +17,7 @@ public class SecurityConfiguration {
             .headers(headers -> headers.frameOptions().disable()) // For H2 console
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/v1/accounts/register").permitAll()
+                .requestMatchers("/api/v1/accounts/login").permitAll()
                 .requestMatchers("/api/v1/accounts/hello").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
@@ -25,9 +26,8 @@ public class SecurityConfiguration {
             );
         return http.build();
     }
-
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return  authenticationConfiguration.getAuthenticationManager();
     }
 }

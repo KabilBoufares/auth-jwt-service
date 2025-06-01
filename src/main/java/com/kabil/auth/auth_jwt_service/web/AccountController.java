@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kabil.auth.auth_jwt_service.dto.AccountReponceDto;
+import com.kabil.auth.auth_jwt_service.dto.LoginRequestDto;
 import com.kabil.auth.auth_jwt_service.dto.RegisterRequestDto;
-import com.kabil.auth.auth_jwt_service.services.AccountService;
+
+import com.kabil.auth.auth_jwt_service.services.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountController {
 
-    private final  AccountService accountService;
+    private final  AuthenticationService authenticationService;
     @GetMapping ("/hello")
     public String hello() {
         return "Hello from Account Service";
@@ -26,6 +28,11 @@ public class AccountController {
 
     @PostMapping("/register")
     public ResponseEntity <AccountReponceDto> register(@RequestBody RegisterRequestDto request){
-        return accountService.addNewUser(request);
+        return authenticationService.register(request);
     }
+    @PostMapping("/login")
+    public ResponseEntity <AccountReponceDto> login(@RequestBody LoginRequestDto request){
+        return authenticationService.login(request);
+    }
+   
 }
