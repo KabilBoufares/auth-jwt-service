@@ -1,9 +1,13 @@
 package com.kabil.auth.auth_jwt_service.entities;
 
 
+import java.util.Collection;
+
+import org.hibernate.annotations.ManyToAny;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,6 +31,8 @@ public class User implements UserDetails{
     private String lastname;
     private String email;
     private String password;
+    @ManyToAny(fetch =FetchType.EAGER)
+    private Collection<Role> roles;
 
     @Override
     public String getUsername() {
