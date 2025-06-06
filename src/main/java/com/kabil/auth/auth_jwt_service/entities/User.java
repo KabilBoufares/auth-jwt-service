@@ -1,9 +1,13 @@
 package com.kabil.auth.auth_jwt_service.entities;
 
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.annotations.ManyToAny;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
@@ -35,14 +39,19 @@ public class User implements UserDetails{
     private Collection<Role> roles;
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+       List<GrantedAuthority> authorities= new ArrayList<>();
+       this.roles.forEach (role -> {
+           authorities.add(new SimpleGrantedAuthority(role.getRoleName().toString()));
+       }); 
+       return authorities;
+    }
+
+    @Override
     public String getUsername() {
         return email;
     }
 
-    @Override
-    public java.util.Collection<? extends org.springframework.security.core.GrantedAuthority> getAuthorities() {
-        return java.util.Collections.emptyList();
-    }
 
     @Override
     public boolean isAccountNonExpired() {
