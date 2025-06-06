@@ -1,8 +1,13 @@
 package com.kabil.auth.auth_jwt_service.services;
 
+import org.springframework.http.HttpHeaders;
+
+
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.kabil.auth.auth_jwt_service.dto.AccountReponceDto;
@@ -21,6 +26,7 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final CustomPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
     
     public ResponseEntity <AccountReponceDto>  register(RegisterRequestDto request) {
         // Check if a user with the same email already exists
@@ -46,26 +52,29 @@ public class AuthenticationService {
     }
 
     
-    public ResponseEntity<AccountReponceDto> login(LoginRequestDto user) {
-        try {
+    public ResponseEntity<AccountReponceDto> login(LoginRequestDto request) {
+        
+            var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new org.springframework.security.core.userdetails.UsernameNotFoundException("User not found with email: " + request.getEmail()));
             Authentication authentication = authenticationManager.authenticate(
             new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                user.getEmail(),
-                user.getPassword()
+                request.getEmail(),
+                request.getPassword()
             )
             );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            var token = jwtService.generateToken(user);
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.add("Access-Control-Expose-Headers", "Authorization");
+            responseHeaders.add("Authorization", "Bearer " + token);
+
             System.out.println("Authentication successful: " + authentication.isAuthenticated());
-        } catch (Exception e) {
-            System.out.println("Authentication failed: " + e.getMessage());
-            return ResponseEntity
-            .badRequest()
+
+        return ResponseEntity.ok()
+            .headers(responseHeaders)
             .body(AccountReponceDto.builder()
-                .message("Invalid email or password")
-                .build());
-        }
-        return ResponseEntity.ok(
-            AccountReponceDto.builder()
                 .message("Login successful")
+                .token(token)
                 .build()
         );
     }
