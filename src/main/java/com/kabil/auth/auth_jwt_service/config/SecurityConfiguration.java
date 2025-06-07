@@ -1,13 +1,13 @@
 package com.kabil.auth.auth_jwt_service.config;
 
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.kabil.auth.auth_jwt_service.entities.User;
+
 import com.kabil.auth.auth_jwt_service.security.JwtAuthFilter;
 
 import lombok.RequiredArgsConstructor;
