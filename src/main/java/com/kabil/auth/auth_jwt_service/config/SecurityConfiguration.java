@@ -31,6 +31,8 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/v1/accounts/register").permitAll()
                 .requestMatchers("/api/v1/accounts/login").permitAll()
                 .requestMatchers("/api/v1/accounts/hello").permitAll()
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/user/**").hasRole("USER")
                 .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
             );
